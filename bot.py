@@ -50,9 +50,15 @@ def ask_gemini(prompt):
     }
     try:
         response = requests.post(url, headers=headers, json=payload)
-        return response.json()['candidates'][0]['content']['parts'][0]['text']
+        response.raise_for_status()  # выбросит исключение, если статус != 200
+        data = response.json()
+        # Для отладки можно распечатать полный ответ:
+        print("Ответ от Gemini:", data)
+        return data['candidates'][0]['content']['parts'][0]['text']
     except Exception as e:
-        return "Произошла ошибка при обращении к ИИ."
+        print("Ошибка при обращении к ИИ:", e)
+        return f"Произошла ошибка при обращении к ИИ: {e}"
+
 
 @app.route('/')
 def index():
