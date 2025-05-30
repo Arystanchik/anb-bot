@@ -1,0 +1,13 @@
+﻿services:
+  - type: web
+    name: vk-gemini-bot
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn bot:app
+    envVars:
+      - key: VK_GROUP_TOKEN
+        sync: false
+      - key: VK_CONFIRMATION_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
