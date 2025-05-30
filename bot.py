@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request 
 import os
 import requests
 
@@ -15,10 +15,19 @@ def callback():
         return VK_CONFIRMATION_TOKEN
 
     if data['type'] == 'message_new':
-        user_id = data['object']['message']['from_id']
-        user_msg = data['object']['message']['text']
-        reply = ask_gemini(user_msg)
-        send_vk_message(user_id, reply)
+        message = data['object']['message']
+        user_id = message['from_id']
+        text = message.get('text', '').strip()
+
+        trigger = "!бот "
+        if text.lower().startswith(trigger):
+            user_msg = text[len(trigger):].strip()  # Убираем команду из текста
+            reply = ask_gemini(user_msg)
+            send_vk_message(user_id, reply)
+        else:
+            # Можно не отвечать или отправить подсказку
+            pass
+
     return 'ok'
 
 def send_vk_message(user_id, text):
